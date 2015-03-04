@@ -38,7 +38,7 @@ int _tmain(int argc, _TCHAR* argv[])
 11 16 15  6
 10  9  8  7
 */
-// 找规律用一位数组的方式实现
+// 找规律用一维数组的方式实现
 void PrintMatrix(int n)
 {
 	if ((n < 1) || (n > MAX_NUM))
@@ -83,6 +83,7 @@ void PrintMatrix(int n)
 
 }
 
+// 计算相邻数字位置差值
 void CalcStep(int *step, int num)
 {
 	if (step == NULL || num <= 0)
@@ -90,7 +91,7 @@ void CalcStep(int *step, int num)
 		return;
 	}
 	
-	// 第一个步进数为从0到0，是0
+	// 第一个步进数为从0到0，是0，再n-1个1
 	step[0] = 0;
 	int i = 1;
 	for (; i < num; i++)
@@ -98,6 +99,7 @@ void CalcStep(int *step, int num)
 		step[i] = 1;
 	}
 
+	// 再n-1个n 再n-1个-1 再n-2个-n，在n-2个1，反复，
 	int count = num - 1;
 	while (count > 0)
 	{
@@ -152,7 +154,12 @@ void InitArray(int *array, int num)
 8 9 4
 7 6 5
 
-分四阶段，右下左上
+分四阶段
+第一阶段：依次增加x。
+第二阶段：依次增加y。
+第三阶段：依次减小x。
+第四阶段：依次减小y。
+每一个阶段之后x和y所对应的数字个数会减一，直到都为0结束。
 
 */
 void PrintMatrixBy2D(int n)
@@ -177,27 +184,32 @@ void PrintMatrixBy2D(int n)
 	int current_x_num = n;
 	int current_y_num = n - 1;
 
+	// 每一个阶段之后x和y所对应的数字个数会减一，直到都为0结束。
 	int current_num = 0;
 	while ((current_x_num > 0) || (current_y_num > 0))
 	{
+		// 第一阶段：依次增加x。
 		for (i = 0; i < current_x_num; i++)
 		{
 			data[++current_x_position][current_y_position] = ++current_num;
 		}
 		current_x_num--;
 
+		// 第二阶段：依次增加y。
 		for (i = 0; i < current_y_num; i++)
 		{
 			data[current_x_position][++current_y_position] = ++current_num;
 		}
 		current_y_num--;
 
+		// 第三阶段：依次减小x。
 		for (i = 0; i < current_x_num; i++)
 		{
 			data[--current_x_position][current_y_position] = ++current_num;
 		}
 		current_x_num--;
 
+		// 第四阶段：依次减小y。
 		for (i = 0; i < current_y_num; i++)
 		{
 			data[current_x_position][--current_y_position] = ++current_num;
